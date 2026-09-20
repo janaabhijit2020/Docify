@@ -1,0 +1,25 @@
+  services:
+
+    postgres:
+      image: pgvector/pgvector:pg17
+      container_name: docify-postgres
+
+      environment:
+        POSTGRES_DB: docify
+        POSTGRES_USER: docify
+        POSTGRES_PASSWORD: docify_dev_password
+
+      ports:
+        - "5432:5432"
+
+      volumes:
+        - docify_postgres_data:/var/lib/postgresql/data
+
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U docify -d docify" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+
+  volumes:
+    docify_postgres_data:

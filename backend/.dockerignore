@@ -1,0 +1,9 @@
+target/
+.idea/
+*.iml
+.git/
+.gitignore
+storage/documents/
+src/test/
+.env
+.env.*
