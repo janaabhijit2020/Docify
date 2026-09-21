@@ -1,5 +1,7 @@
 package com.docify.backend.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,10 +15,18 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(
             IllegalArgumentException exception
     ) {
+        logger.warn(
+                "Bad request: {}",
+                exception.getMessage()
+        );
+
         Map<String, Object> response = new HashMap<>();
 
         response.put("timestamp", LocalDateTime.now());
@@ -44,6 +54,11 @@ public class GlobalExceptionHandler {
                         )
                 );
 
+        logger.warn(
+                "Validation failed: {}",
+                errors
+        );
+
         Map<String, Object> response = new HashMap<>();
 
         response.put("timestamp", LocalDateTime.now());
@@ -60,6 +75,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleGenericException(
             Exception exception
     ) {
+        logger.error(
+                "Unexpected application error",
+                exception
+        );
+
         Map<String, Object> response = new HashMap<>();
 
         response.put("timestamp", LocalDateTime.now());
